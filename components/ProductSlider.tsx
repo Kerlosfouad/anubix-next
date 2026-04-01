@@ -114,7 +114,7 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
         </div>
 
         {/* Tab bar — directly below arrows */}
-        <div className="flex justify-center mt-3">
+        <div className="flex justify-center mt-3 pt-10">
           <div className="flex bg-white/70 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg border border-white/50">
             {tabs.map((tab) => (
               <button
