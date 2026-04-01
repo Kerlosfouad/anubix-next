@@ -21,12 +21,6 @@ export default function HomePage() {
   return (
     <div className="flex flex-col items-center justify-center" style={{ height: "calc(100dvh - 56px)" }}>
 
-      {/* Circle decoration */}
-      <div className="absolute w-[260px] h-[260px] border-[3px] border-white/80 rounded-full flex justify-center items-center pointer-events-none z-0">
-        <div className="w-[228px] h-[228px] border-[12px] border-white rounded-full" />
-        <h1 className="font-smooch absolute text-[80px] leading-none select-none">ANUBIX</h1>
-      </div>
-
       {/* Slider */}
       <div className="w-full relative z-10">
         <ProductSlider products={filtered} activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
