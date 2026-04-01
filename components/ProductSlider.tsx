@@ -9,22 +9,34 @@ import { Product } from "@/lib/products";
 
 const ARTryOn = dynamic(() => import("./ARTryOn"), { ssr: false });
 
+const TABS = [
+  { id: "short", label: "Short" },
+  { id: "long", label: "Long" },
+  { id: "pants", label: "Pants" },
+  { id: "tanktop", label: "Tank" },
+] as const;
+
+type TabId = (typeof TABS)[number]["id"];
+
 interface Props {
   products: Product[];
+  activeTab: TabId;
+  onTabChange: (tab: TabId) => void;
+  tabs: typeof TABS;
 }
 
-export default function ProductSlider({ products }: Props) {
+export default function ProductSlider({ products, activeTab, onTabChange, tabs }: Props) {
   const { addToCart, toggleFavorite, favoriteStates } = useStore();
   const [mounted, setMounted] = useState(false);
   const [arProduct, setArProduct] = useState<Product | null>(null);
   const [activeProduct, setActiveProduct] = useState<Product>(products[0]);
 
   useEffect(() => setMounted(true), []);
-  useEffect(() => { setActiveProduct(products[0]); }, [products]);
+  useEffect(() => { if (products[0]) setActiveProduct(products[0]); }, [products]);
 
   return (
     <>
-      <div className="w-full relative">
+      <div className="w-full">
         <Swiper
           modules={[Navigation]}
           loop
@@ -47,7 +59,6 @@ export default function ProductSlider({ products }: Props) {
           {products.map((p) => (
             <SwiperSlide key={p.id}>
               <article className="text-center select-none">
-                {/* Image */}
                 <div className="relative mx-auto w-[200px] h-[220px] flex items-center justify-center">
                   <Image
                     src={p.image}
@@ -58,12 +69,9 @@ export default function ProductSlider({ products }: Props) {
                     style={{ filter: "drop-shadow(-6px 12px 20px rgba(0,0,0,0.18))" }}
                   />
                 </div>
-
-                {/* Info */}
                 <h3 className="font-semibold text-sm mt-3 tracking-wide">{p.name}</h3>
                 <p className="text-sm font-bold mt-0.5 mb-3">{p.price}</p>
 
-                {/* Favorite + Add */}
                 <div className="flex justify-center gap-2">
                   <button
                     onClick={() => toggleFavorite({ id: p.id, title: p.name, price: p.price, image: p.image })}
@@ -75,7 +83,6 @@ export default function ProductSlider({ products }: Props) {
                   >
                     <i className="ri-heart-fill text-base" />
                   </button>
-
                   <button
                     onClick={() => addToCart({ title: p.name, price: p.price, image: p.image, size: "M" })}
                     className="inline-flex items-center justify-center gap-1 px-4 h-10 rounded-full bg-black text-white text-xs font-semibold tracking-wider hover:bg-gray-800 transition-colors"
@@ -89,12 +96,11 @@ export default function ProductSlider({ products }: Props) {
           ))}
         </Swiper>
 
-        {/* Navigation row: prev — PREVIEW — next */}
+        {/* Row: prev — PREVIEW — next */}
         <div className="flex items-center justify-center gap-4 mt-3">
           <div className="swiper-button-prev !static !transform-none !w-auto !h-auto">
             <i className="ri-arrow-left-line text-lg" />
           </div>
-
           <button
             onClick={() => activeProduct && setArProduct(activeProduct)}
             className="inline-flex items-center justify-center gap-1.5 px-5 h-9 rounded-full bg-white border-2 border-gray-200 text-black text-xs font-semibold tracking-wider hover:border-black transition-colors"
@@ -102,14 +108,29 @@ export default function ProductSlider({ products }: Props) {
             <i className="ri-eye-line text-sm" />
             PREVIEW
           </button>
-
           <div className="swiper-button-next !static !transform-none !w-auto !h-auto">
             <i className="ri-arrow-right-line text-lg" />
           </div>
         </div>
+
+        {/* Tab bar — directly below arrows */}
+        <div className="flex justify-center mt-3">
+          <div className="flex bg-white/70 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg border border-white/50">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => onTabChange(tab.id)}
+                className={`px-5 py-2 text-xs font-semibold tracking-widest uppercase transition-all duration-300 ${
+                  activeTab === tab.id ? "bg-black text-white" : "text-gray-500 hover:text-black"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* AR Modal */}
       {arProduct && (
         <ARTryOn
           shirtImage={arProduct.image}
