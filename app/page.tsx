@@ -20,7 +20,25 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col" style={{ height: "calc(100dvh - 56px)" }}>
-      {/* Slider — takes all remaining space */}
+
+      {/* 1. Tab bar — just below navbar */}
+      <div className="shrink-0 flex justify-center items-center py-2 bg-[hsl(0,0%,93%)]">
+        <div className="flex bg-white/70 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg border border-white/50">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-5 py-2 text-xs font-semibold tracking-widest uppercase transition-all duration-300 ${
+                activeTab === tab.id ? "bg-black text-white" : "text-gray-500 hover:text-black"
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 2. Slider — fills remaining space */}
       <div className="flex-1 flex items-center justify-center relative overflow-hidden min-h-0">
         {/* Circle decoration */}
         <div className="absolute w-[260px] h-[260px] border-[3px] border-white/80 rounded-full flex justify-center items-center pointer-events-none z-0">
@@ -32,22 +50,6 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Tab bar — always at bottom, part of normal flow */}
-      <div className="flex justify-center pb-3 pt-2 shrink-0">
-        <div className="flex bg-white/70 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg border border-white/50">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2.5 text-xs font-semibold tracking-widest uppercase transition-all duration-300 ${
-                activeTab === tab.id ? "bg-black text-white" : "text-gray-500 hover:text-black"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

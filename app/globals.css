@@ -22,12 +22,11 @@ body {
   font-family: var(--second-font);
 }
 
-/* ── Smooth page transitions ── */
 html {
   scroll-behavior: smooth;
 }
 
-/* ── Swiper ── */
+/* ── Swiper slides ── */
 .swiper-slide {
   transform: scale(0.5) !important;
   opacity: 0.5 !important;
@@ -42,23 +41,19 @@ html {
   transform: scale(0.78) !important;
   opacity: 0.75 !important;
 }
+
+/* ── Swiper nav buttons — static, no absolute positioning ── */
 .swiper-button-prev,
 .swiper-button-next {
-  top: initial !important;
-  bottom: 0 !important;
+  position: static !important;
+  margin: 0 !important;
   color: black !important;
+  width: auto !important;
+  height: auto !important;
 }
 .swiper-button-prev::after,
 .swiper-button-next::after {
   content: "" !important;
-}
-.swiper-button-prev {
-  left: calc(50% - 8rem) !important;
-  transform: scale(0.6) !important;
-}
-.swiper-button-next {
-  right: calc(50% - 8rem) !important;
-  transform: scale(0.6) !important;
 }
 
 /* ── Nav underline ── */

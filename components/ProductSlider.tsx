@@ -17,12 +17,14 @@ export default function ProductSlider({ products }: Props) {
   const { addToCart, toggleFavorite, favoriteStates } = useStore();
   const [mounted, setMounted] = useState(false);
   const [arProduct, setArProduct] = useState<Product | null>(null);
+  const [activeProduct, setActiveProduct] = useState<Product>(products[0]);
 
   useEffect(() => setMounted(true), []);
+  useEffect(() => { setActiveProduct(products[0]); }, [products]);
 
   return (
     <>
-      <div className="w-full relative pb-8">
+      <div className="w-full relative">
         <Swiper
           modules={[Navigation]}
           loop
@@ -31,6 +33,10 @@ export default function ProductSlider({ products }: Props) {
           navigation={{
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
+          }}
+          onSlideChange={(swiper) => {
+            const idx = swiper.realIndex;
+            if (products[idx]) setActiveProduct(products[idx]);
           }}
           breakpoints={{
             0: { slidesPerView: 1 },
@@ -57,9 +63,8 @@ export default function ProductSlider({ products }: Props) {
                 <h3 className="font-semibold text-sm mt-3 tracking-wide">{p.name}</h3>
                 <p className="text-sm font-bold mt-0.5 mb-3">{p.price}</p>
 
-                {/* Actions */}
-                <div className="flex justify-center gap-2 flex-wrap">
-                  {/* Favorite */}
+                {/* Favorite + Add */}
+                <div className="flex justify-center gap-2">
                   <button
                     onClick={() => toggleFavorite({ id: p.id, title: p.name, price: p.price, image: p.image })}
                     className={`inline-flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-200 ${
@@ -71,7 +76,6 @@ export default function ProductSlider({ products }: Props) {
                     <i className="ri-heart-fill text-base" />
                   </button>
 
-                  {/* Add to cart */}
                   <button
                     onClick={() => addToCart({ title: p.name, price: p.price, image: p.image, size: "M" })}
                     className="inline-flex items-center justify-center gap-1 px-4 h-10 rounded-full bg-black text-white text-xs font-semibold tracking-wider hover:bg-gray-800 transition-colors"
@@ -79,23 +83,30 @@ export default function ProductSlider({ products }: Props) {
                     <i className="ri-shopping-cart-2-line text-sm" />
                     ADD
                   </button>
-
-                  {/* AR Preview */}
-                  <button
-                    onClick={() => setArProduct(p)}
-                    className="inline-flex items-center justify-center gap-1 px-4 h-10 rounded-full bg-white border-2 border-gray-200 text-black text-xs font-semibold tracking-wider hover:border-black transition-colors"
-                  >
-                    <i className="ri-eye-line text-sm" />
-                    PREVIEW
-                  </button>
                 </div>
               </article>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        <div className="swiper-button-prev"><i className="ri-arrow-left-line" /></div>
-        <div className="swiper-button-next"><i className="ri-arrow-right-line" /></div>
+        {/* Navigation row: prev — PREVIEW — next */}
+        <div className="flex items-center justify-center gap-4 mt-3">
+          <div className="swiper-button-prev !static !transform-none !w-auto !h-auto">
+            <i className="ri-arrow-left-line text-lg" />
+          </div>
+
+          <button
+            onClick={() => activeProduct && setArProduct(activeProduct)}
+            className="inline-flex items-center justify-center gap-1.5 px-5 h-9 rounded-full bg-white border-2 border-gray-200 text-black text-xs font-semibold tracking-wider hover:border-black transition-colors"
+          >
+            <i className="ri-eye-line text-sm" />
+            PREVIEW
+          </button>
+
+          <div className="swiper-button-next !static !transform-none !w-auto !h-auto">
+            <i className="ri-arrow-right-line text-lg" />
+          </div>
+        </div>
       </div>
 
       {/* AR Modal */}
