@@ -59,12 +59,6 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
           {products.map((p) => (
             <SwiperSlide key={p.id}>
               <article className="text-center select-none relative">
-                {/* Circle decoration — behind shirt */}
-                <div className="absolute left-1/2 -translate-x-1/2 top-0 w-[220px] h-[220px] border-[3px] border-white/80 rounded-full flex justify-center items-center pointer-events-none z-0">
-                  <div className="w-[192px] h-[192px] border-[10px] border-white rounded-full" />
-                  <h1 className="font-smooch absolute text-[64px] leading-none select-none text-black/80">ANUBIX</h1>
-                </div>
-
                 <div className="relative mx-auto w-[200px] h-[220px] flex items-center justify-center z-10">
                   <Image
                     src={p.image}
