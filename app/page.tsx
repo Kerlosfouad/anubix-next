@@ -2,6 +2,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { products } from "@/lib/products";
+import Footer from "@/components/Footer";
 
 const ProductSlider = dynamic(() => import("@/components/ProductSlider"), { ssr: false });
 
@@ -19,19 +20,23 @@ export default function HomePage() {
   const filtered = products.filter((p) => p.category === activeTab);
 
   return (
-    <div className="flex flex-col items-center justify-center" style={{ height: "calc(100dvh - 56px)" }}>
+    <div className="flex flex-col" style={{ height: "calc(100dvh - 56px)" }}>
 
-      {/* Circle — fixed behind slider, doesn't move */}
+      {/* Circle — fixed behind slider */}
       <div className="absolute w-[280px] h-[280px] border-[3px] border-white/80 rounded-full flex justify-center items-center pointer-events-none z-0" style={{ top: "calc(50% - 200px)", left: "50%", transform: "translateX(-50%)" }}>
         <div className="w-[246px] h-[246px] border-[12px] border-white rounded-full" />
         <h1 className="font-smooch absolute text-[86px] leading-none select-none">ANUBIX</h1>
       </div>
 
-      {/* Slider */}
-      <div className="w-full relative z-10">
-        <ProductSlider products={filtered} activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
+      {/* Slider — fills space */}
+      <div className="flex-1 flex items-center justify-center relative z-10 min-h-0 overflow-hidden w-full">
+        <div className="w-full">
+          <ProductSlider products={filtered} activeTab={activeTab} onTabChange={setActiveTab} tabs={tabs} />
+        </div>
       </div>
 
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
