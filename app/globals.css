@@ -1,26 +1,143 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Smooch&display=swap");
+@import "remixicon/fonts/remixicon.css";
+@import "swiper/css";
+@import "swiper/css/navigation";
+
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --second-font: "Smooch", cursive;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Montserrat", sans-serif;
+  background-color: hsl(0, 0%, 93%);
+}
+
+.font-smooch {
+  font-family: var(--second-font);
+}
+
+/* ── Smooth page transitions ── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Swiper ── */
+.swiper-slide {
+  transform: scale(0.5) !important;
+  opacity: 0.5 !important;
+  transition: transform 0.4s ease, opacity 0.4s ease !important;
+}
+.swiper-slide-active {
+  transform: scale(1) !important;
+  opacity: 1 !important;
+}
+.swiper-slide-prev,
+.swiper-slide-next {
+  transform: scale(0.78) !important;
+  opacity: 0.75 !important;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  top: initial !important;
+  bottom: 0 !important;
+  color: black !important;
+}
+.swiper-button-prev::after,
+.swiper-button-next::after {
+  content: "" !important;
+}
+.swiper-button-prev {
+  left: calc(50% - 8rem) !important;
+  transform: scale(0.6) !important;
+}
+.swiper-button-next {
+  right: calc(50% - 8rem) !important;
+  transform: scale(0.6) !important;
+}
+
+/* ── Nav underline ── */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  height: 2px;
+  background-color: black;
+  width: 0;
+  transition: width 0.3s ease;
+}
+.nav-underline:hover::after,
+.nav-underline.active::after {
+  width: 100%;
+}
+
+/* ── Tab bar links ── */
+.tab-link {
+  position: relative;
+  transition: all 0.3s ease;
+}
+.tab-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  background-color: black;
+  height: 2px;
+  transition: width 0.3s ease;
+}
+.tab-link::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0%;
+  background-color: black;
+  height: 2px;
+  transition: width 0.3s ease;
+}
+.tab-link:hover::before,
+.tab-link:hover::after,
+.tab-link.active::before,
+.tab-link.active::after {
+  width: 100%;
+}
+
+/* ── Form input ── */
+.input-field {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: "Montserrat", sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background: #fafafa;
+}
+.input-field:focus {
+  border-color: black;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+  background: white;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
 }
