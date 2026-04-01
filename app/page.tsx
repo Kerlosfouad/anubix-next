@@ -22,7 +22,7 @@ export default function HomePage() {
     <div className="flex flex-col items-center justify-center" style={{ height: "calc(100dvh - 56px)" }}>
 
       {/* Circle — fixed behind slider, doesn't move */}
-      <div className="absolute w-[280px] h-[280px] border-[3px] border-white/80 rounded-full flex justify-center items-center pointer-events-none z-0">
+      <div className="absolute w-[280px] h-[280px] border-[3px] border-white/80 rounded-full flex justify-center items-center pointer-events-none z-0" style={{ top: "calc(50% - 200px)", left: "50%", transform: "translateX(-50%)" }}>
         <div className="w-[246px] h-[246px] border-[12px] border-white rounded-full" />
         <h1 className="font-smooch absolute text-[86px] leading-none select-none">ANUBIX</h1>
       </div>
