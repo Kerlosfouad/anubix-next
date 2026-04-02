@@ -71,7 +71,7 @@ export default function ARTryOn({ onClose }: Props) {
         ) : (
           // @ts-ignore
           <model-viewer
-            src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+            src="/models/src/model-cmnhx81c3027ejvpp74d3snq7.glb"
             alt="T-shirt 3D model"
             ar
             ar-modes="webxr scene-viewer quick-look"
