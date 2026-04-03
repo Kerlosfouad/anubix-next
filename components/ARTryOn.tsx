@@ -15,8 +15,6 @@ declare global {
         style?: React.CSSProperties;
         "ar-scale"?: string;
         "ar-placement"?: string;
-        "min-camera-orbit"?: string;
-        "max-camera-orbit"?: string;
       }, HTMLElement>;
     }
   }
@@ -34,33 +32,36 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
+// Hotspots: position on the 3D model
 const HOTSPOTS = [
   {
-    slot: "hotspot-1",
-    position: "0 0.3 0.1",
-    normal: "0 0 1",
-    title: "Premium Fabric",
-    points: ["100% Polyester", "Sweat-repellent", "Ultra lightweight"],
+    slot: "hotspot-neck",
+    position: "0 0.52 0.08",
+    normal: "0 1 0",
+    side: "right" as const,
+    title: "Collar",
+    points: ["Ribbed crew neck", "Keeps shape", "Comfortable fit"],
   },
   {
-    slot: "hotspot-2",
-    position: "-0.15 0.1 0.05",
+    slot: "hotspot-sleeve",
+    position: "-0.22 0.28 0.05",
     normal: "-1 0 0",
-    title: "Perfect Fit",
-    points: ["Sizes XS → XL", "Slim cut", "Flexible stretch"],
+    side: "left" as const,
+    title: "Sleeve",
+    points: ["Raglan cut", "Full range of motion", "Anti-chafe seams"],
   },
   {
-    slot: "hotspot-3",
-    position: "0 -0.1 0.1",
+    slot: "hotspot-body",
+    position: "0.05 0.05 0.1",
     normal: "0 0 1",
-    title: "Design",
-    points: ["Exclusive print", "Fade-resistant", "Unique style"],
+    side: "right" as const,
+    title: "Body",
+    points: ["Sweat-repellent", "100% Polyester", "Ultra lightweight"],
   },
 ];
 
 export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () => void }) {
   const [loaded, setLoaded] = useState(false);
-  const [activeHotspot, setActiveHotspot] = useState<number | null>(null);
 
   useEffect(() => {
     loadScript("https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js")
@@ -88,105 +89,129 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
             <p className="text-white text-sm tracking-widest uppercase">Loading 3D model...</p>
           </div>
         ) : (
-          <>
-            {/* @ts-ignore */}
-            <model-viewer
-              src="/models/src/model-cmnhx81c3027ejvpp74d3snq7.glb"
-              alt="T-shirt 3D model"
-              ar
-              ar-modes="webxr scene-viewer quick-look"
-              camera-controls
-              auto-rotate
-              shadow-intensity="1"
-              ar-scale="fixed"
-              ar-placement="floor"
-              style={{ width: "100%", height: "100%", background: "#111" }}
-            >
-              {/* Hotspot buttons on the model */}
-              {HOTSPOTS.map((h, i) => (
-                <button
-                  key={h.slot}
-                  slot={h.slot}
-                  data-position={h.position}
-                  data-normal={h.normal}
-                  onClick={() => setActiveHotspot(activeHotspot === i ? null : i)}
-                  style={{
-                    width: 28,
-                    height: 28,
+          // @ts-ignore
+          <model-viewer
+            src="/models/src/model-cmnhx81c3027ejvpp74d3snq7.glb"
+            alt="T-shirt 3D model"
+            ar
+            ar-modes="webxr scene-viewer quick-look"
+            camera-controls
+            auto-rotate
+            shadow-intensity="1"
+            ar-scale="fixed"
+            ar-placement="floor"
+            style={{ width: "100%", height: "100%", background: "#111" }}
+          >
+            {HOTSPOTS.map((h) => (
+              <div
+                key={h.slot}
+                slot={h.slot}
+                data-position={h.position}
+                data-normal={h.normal}
+                style={{ display: "flex", alignItems: "center", pointerEvents: "none" }}
+              >
+                {/* Left-side card */}
+                {h.side === "left" && (
+                  <div style={{
+                    background: "rgba(255,255,255,0.15)",
+                    backdropFilter: "blur(8px)",
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    borderRadius: 10,
+                    padding: "6px 10px",
+                    marginRight: 6,
+                    minWidth: 110,
+                    textAlign: "right",
+                  }}>
+                    <p style={{ color: "white", fontWeight: 700, fontSize: 11, marginBottom: 3, letterSpacing: "0.05em" }}>
+                      {h.title}
+                    </p>
+                    {h.points.map((p) => (
+                      <div key={p} style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 4, marginBottom: 2 }}>
+                        <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 10 }}>{p}</span>
+                        <span style={{ width: 5, height: 5, borderRadius: "50%", background: "white", flexShrink: 0 }} />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Line + dot */}
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {h.side === "right" && (
+                    <div style={{ width: 24, height: 1, background: "rgba(255,255,255,0.7)" }} />
+                  )}
+                  <div style={{
+                    width: 10,
+                    height: 10,
                     borderRadius: "50%",
                     background: "white",
-                    border: "3px solid black",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: 13,
-                    fontWeight: "bold",
-                    color: "black",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.4)",
-                  }}
-                >
-                  {i + 1}
-                </button>
-              ))}
-
-              {/* AR button */}
-              <button
-                slot="ar-button"
-                style={{
-                  position: "absolute",
-                  bottom: 16,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  background: "white",
-                  color: "black",
-                  border: "none",
-                  borderRadius: 999,
-                  padding: "12px 24px",
-                  fontWeight: 700,
-                  fontSize: 13,
-                  letterSpacing: "0.1em",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-                }}
-              >
-                📷 View in your space
-              </button>
-            {/* @ts-ignore */}
-            </model-viewer>
-
-            {/* Annotation popup */}
-            {activeHotspot !== null && (
-              <div
-                className="absolute top-4 left-1/2 -translate-x-1/2 bg-white/95 backdrop-blur rounded-2xl p-4 shadow-xl w-[220px] z-10"
-                style={{ pointerEvents: "none" }}
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="w-6 h-6 rounded-full bg-black text-white text-xs font-bold flex items-center justify-center">
-                    {activeHotspot + 1}
-                  </span>
-                  <h4 className="font-bold text-sm">{HOTSPOTS[activeHotspot].title}</h4>
+                    border: "2px solid rgba(255,255,255,0.5)",
+                    boxShadow: "0 0 0 3px rgba(255,255,255,0.2)",
+                    flexShrink: 0,
+                  }} />
+                  {h.side === "left" && (
+                    <div style={{ width: 24, height: 1, background: "rgba(255,255,255,0.7)" }} />
+                  )}
                 </div>
-                <ul className="flex flex-col gap-1">
-                  {HOTSPOTS[activeHotspot].points.map((p) => (
-                    <li key={p} className="text-xs text-gray-600 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-black shrink-0" />
-                      {p}
-                    </li>
-                  ))}
-                </ul>
+
+                {/* Right-side card */}
+                {h.side === "right" && (
+                  <div style={{
+                    background: "rgba(255,255,255,0.15)",
+                    backdropFilter: "blur(8px)",
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    borderRadius: 10,
+                    padding: "6px 10px",
+                    marginLeft: 6,
+                    minWidth: 110,
+                  }}>
+                    <p style={{ color: "white", fontWeight: 700, fontSize: 11, marginBottom: 3, letterSpacing: "0.05em" }}>
+                      {h.title}
+                    </p>
+                    {h.points.map((p) => (
+                      <div key={p} style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
+                        <span style={{ width: 5, height: 5, borderRadius: "50%", background: "white", flexShrink: 0 }} />
+                        <span style={{ color: "rgba(255,255,255,0.8)", fontSize: 10 }}>{p}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </>
+            ))}
+
+            {/* AR button */}
+            <button
+              slot="ar-button"
+              style={{
+                position: "absolute",
+                bottom: 16,
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "white",
+                color: "black",
+                border: "none",
+                borderRadius: 999,
+                padding: "12px 24px",
+                fontWeight: 700,
+                fontSize: 13,
+                letterSpacing: "0.1em",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
+                pointerEvents: "all",
+              }}
+            >
+              📷 View in your space
+            </button>
+          {/* @ts-ignore */}
+          </model-viewer>
         )}
       </div>
 
       {loaded && (
         <div className="shrink-0 bg-black/80 text-white/50 text-xs text-center py-2 px-4 tracking-wide">
-          Tap the numbered dots to learn more · Tap "View in your space" for AR
+          Drag to rotate · Tap "View in your space" for AR
         </div>
       )}
     </div>
