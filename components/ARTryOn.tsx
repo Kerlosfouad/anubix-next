@@ -24,7 +24,6 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
-// Hotspot positions on model + where the card appears on screen
 const HOTSPOTS = [
   {
     slot: "hotspot-neck",
@@ -32,9 +31,7 @@ const HOTSPOTS = [
     normal: "0 1 0",
     title: "Collar",
     points: ["Ribbed crew neck", "Keeps shape", "Comfortable fit"],
-    // card position: top-right corner
-    cardStyle: { top: 80, right: 16 },
-    dotId: "dot-neck",
+    card: { top: 90, right: 20 },
   },
   {
     slot: "hotspot-sleeve",
@@ -42,9 +39,7 @@ const HOTSPOTS = [
     normal: "-1 0 0",
     title: "Sleeve",
     points: ["Raglan cut", "Full range of motion", "Anti-chafe seams"],
-    // card position: middle-left
-    cardStyle: { top: "40%", left: 16 },
-    dotId: "dot-sleeve",
+    card: { top: 220, left: 20 },
   },
   {
     slot: "hotspot-body",
@@ -52,9 +47,7 @@ const HOTSPOTS = [
     normal: "0 0 1",
     title: "Fabric",
     points: ["Sweat-repellent", "100% Polyester", "Ultra lightweight"],
-    // card position: bottom-right
-    cardStyle: { bottom: 80, right: 16 },
-    dotId: "dot-body",
+    card: { top: 370, right: 20 },
   },
 ];
 
@@ -68,7 +61,6 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
       .then(() => setLoaded(true));
   }, []);
 
-  // Update SVG lines connecting dots to cards
   useEffect(() => {
     if (!loaded) return;
     const update = () => {
@@ -87,10 +79,7 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
 
         const x1 = dotRect.left + dotRect.width / 2 - rect.left;
         const y1 = dotRect.top + dotRect.height / 2 - rect.top;
-
-        // Connect to nearest edge of card
         const cx = cardRect.left + cardRect.width / 2 - rect.left;
-        const cy = cardRect.top + cardRect.height / 2 - rect.top;
         const x2 = x1 < cx ? cardRect.left - rect.left : cardRect.right - rect.left;
         const y2 = cardRect.top + cardRect.height / 2 - rect.top;
 
@@ -99,7 +88,7 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
       setLines(newLines);
     };
 
-    const interval = setInterval(update, 100);
+    const interval = setInterval(update, 80);
     return () => clearInterval(interval);
   }, [loaded]);
 
@@ -111,12 +100,12 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
           <i className="ri-eye-line text-lg" />
           <span className="text-sm font-semibold tracking-widest uppercase">AR Preview</span>
         </div>
-        <button onClick={onClose} className="text-white text-2xl hover:text-gray-300 transition-colors">
+        <button onClick={onClose} className="text-white text-2xl">
           <i className="ri-close-line" />
         </button>
       </div>
 
-      {/* Model + Annotations */}
+      {/* Main area */}
       <div className="flex-1 relative overflow-hidden" ref={containerRef}>
         {!loaded ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-black">
@@ -125,6 +114,7 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
           </div>
         ) : (
           <>
+            {/* model-viewer — only dots inside */}
             {/* @ts-ignore */}
             <model-viewer
               src="/models/src/model-cmnhx81c3027ejvpp74d3snq7.glb"
@@ -138,7 +128,6 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
               ar-placement="floor"
               style={{ width: "100%", height: "100%", background: "#111" }}
             >
-              {/* Dots on model */}
               {HOTSPOTS.map((h) => (
                 <div
                   key={h.slot}
@@ -146,21 +135,19 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
                   data-position={h.position}
                   data-normal={h.normal}
                   style={{
-                    width: 12, height: 12, borderRadius: "50%",
+                    width: 14, height: 14, borderRadius: "50%",
                     background: "white",
-                    boxShadow: "0 0 0 3px rgba(255,255,255,0.35), 0 0 10px rgba(255,255,255,0.5)",
+                    boxShadow: "0 0 0 4px rgba(255,255,255,0.3), 0 0 12px rgba(255,255,255,0.6)",
                     pointerEvents: "none",
                   }}
                 />
               ))}
-
-              {/* AR button */}
               <button
                 slot="ar-button"
                 style={{
                   position: "absolute", bottom: 16, left: "50%", transform: "translateX(-50%)",
                   background: "white", color: "black", border: "none", borderRadius: 999,
-                  padding: "12px 24px", fontWeight: 700, fontSize: 13, letterSpacing: "0.1em",
+                  padding: "12px 24px", fontWeight: 700, fontSize: 13,
                   cursor: "pointer", display: "flex", alignItems: "center", gap: 8,
                   boxShadow: "0 4px 16px rgba(0,0,0,0.3)", pointerEvents: "all",
                 }}
@@ -170,44 +157,45 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
             {/* @ts-ignore */}
             </model-viewer>
 
-            {/* SVG lines */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 10 }}>
+            {/* SVG lines — above model-viewer */}
+            <svg
+              className="absolute inset-0 pointer-events-none"
+              style={{ width: "100%", height: "100%", zIndex: 20 }}
+            >
               {lines.map((l) => (
                 <line
                   key={l.key}
                   x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2}
-                  stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"
-                  strokeDasharray="4 3"
+                  stroke="rgba(255,255,255,0.7)"
+                  strokeWidth="1.5"
+                  strokeDasharray="5 4"
                 />
               ))}
             </svg>
 
-            {/* Cards — fixed positions on screen edges */}
+            {/* Cards — absolutely positioned, above everything */}
             {HOTSPOTS.map((h) => (
               <div
                 key={h.slot}
                 data-card={h.slot}
-                className="absolute z-20 pointer-events-none"
-                style={h.cardStyle as React.CSSProperties}
+                className="absolute pointer-events-none"
+                style={{ ...h.card, zIndex: 30 }}
               >
-                <div
-                  style={{
-                    background: "rgba(20,20,20,0.75)",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    borderRadius: 10,
-                    padding: "8px 12px",
-                    minWidth: 120,
-                    maxWidth: 140,
-                  }}
-                >
-                  <p style={{ color: "white", fontWeight: 700, fontSize: 12, marginBottom: 5, letterSpacing: "0.06em" }}>
+                <div style={{
+                  background: "rgba(10,10,10,0.82)",
+                  backdropFilter: "blur(12px)",
+                  border: "1px solid rgba(255,255,255,0.25)",
+                  borderRadius: 12,
+                  padding: "8px 12px",
+                  minWidth: 130,
+                }}>
+                  <p style={{ color: "white", fontWeight: 700, fontSize: 12, marginBottom: 6, letterSpacing: "0.06em" }}>
                     {h.title}
                   </p>
                   {h.points.map((p) => (
-                    <div key={p} style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 3 }}>
+                    <div key={p} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                       <span style={{ width: 5, height: 5, borderRadius: "50%", background: "white", flexShrink: 0 }} />
-                      <span style={{ color: "rgba(255,255,255,0.75)", fontSize: 10, lineHeight: 1.3 }}>{p}</span>
+                      <span style={{ color: "rgba(255,255,255,0.75)", fontSize: 10.5, lineHeight: 1.4 }}>{p}</span>
                     </div>
                   ))}
                 </div>
