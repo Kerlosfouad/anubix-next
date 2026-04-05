@@ -42,6 +42,7 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
           loop
           grabCursor
           centeredSlides
+          speed={250}
           navigation={{
             nextEl: ".swiper-button-next",
             prevEl: ".swiper-button-prev",
@@ -65,7 +66,8 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
                     alt={p.name}
                     width={200}
                     height={220}
-                    className="object-contain w-full h-full transition-transform duration-500 hover:scale-105"
+                    priority
+                    className="object-contain w-full h-full transition-transform duration-200 hover:scale-105"
                     style={{ filter: "drop-shadow(-6px 12px 20px rgba(0,0,0,0.18))" }}
                   />
                 </div>
