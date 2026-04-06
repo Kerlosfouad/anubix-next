@@ -111,8 +111,8 @@ export default function AdminPage() {
   );
 
   return (
-    <div className="flex min-h-screen" style={{ background: "#f5f5f5" }}>
-      <aside className="w-60 bg-[#0a0a0a] text-white flex flex-col shrink-0">
+    <div className="flex flex-col md:flex-row min-h-screen pb-16 md:pb-0" style={{ background: "#f5f5f5" }}>
+      <aside className="hidden md:flex w-60 bg-[#0a0a0a] text-white flex-col shrink-0">
         <div className="px-6 py-7 border-b border-white/10">
           <p className="font-smooch text-3xl tracking-wide">ANUBIX</p>
           <p className="text-white/30 text-[10px] tracking-widest uppercase mt-0.5">Admin Panel</p>
@@ -136,8 +136,8 @@ export default function AdminPage() {
         </div>
       </aside>
 
-      <main className="flex-1 p-6 overflow-auto">
-        <div className="grid grid-cols-4 gap-4 mb-6">
+      <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {[
             { label: "Total Orders", value: orders.length,             icon: "ri-file-list-3-line",      accent: "#3b82f6" },
             { label: "New Orders",   value: newCount,                  icon: "ri-notification-3-line",   accent: "#f59e0b" },
@@ -297,6 +297,23 @@ export default function AdminPage() {
           </div>
         )}
       </main>
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a0a] text-white flex z-50">
+        {(["orders", "products"] ).map(t => (
+          <button key={t} onClick={() => setTab(t as "orders" | "products")}
+            className={`flex-1 flex flex-col items-center justify-center py-3 gap-1 text-xs font-medium transition-all ${tab === t ? "text-white" : "text-white/40"}`}>
+            <i className={`text-xl ${t === "orders" ? "ri-shopping-bag-3-line" : "ri-t-shirt-line"}`} />
+            <span className="capitalize text-[10px] tracking-wider">{t}</span>
+            {t === "orders" && newCount > 0 && (
+              <span className="absolute top-1 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{newCount}</span>
+            )}
+          </button>
+        ))}
+        <button onClick={() => setAuthed(false)} className="flex-1 flex flex-col items-center justify-center py-3 gap-1 text-white/40">
+          <i className="ri-logout-box-line text-xl" />
+          <span className="text-[10px] tracking-wider">Logout</span>
+        </button>
+      </nav>
     </div>
   );
 }
