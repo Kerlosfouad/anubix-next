@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useStore } from "@/lib/store";
 
 import Footer from "@/components/Footer";
+import { supabase } from "@/lib/supabase";
 
 const GOVERNORATES = [
   { label: "القاهرة", value: 50 },
@@ -60,13 +61,27 @@ export default function ShopPage() {
   }, 0);
   const finalTotal = baseTotal + shipping;
 
-  function handleConfirm(e: React.FormEvent) {
+  async function handleConfirm(e: React.FormEvent) {
     e.preventDefault();
     if (!form.customerName || !form.customerPhone1 || !form.governorate || !form.customerAddress) {
       alert("الرجاء ملء جميع الحقول المطلوبة.");
       return;
     }
     const govLabel = GOVERNORATES.find((g) => String(g.value) === form.governorate)?.label || form.governorate;
+
+    // Save order to Supabase
+    await supabase.from("orders").insert({
+      customer_name: form.customerName,
+      phone1: form.customerPhone1,
+      phone2: form.customerPhone2 || null,
+      governorate: govLabel,
+      address: form.customerAddress,
+      payment_method: form.paymentMethod,
+      items: cart.map((p) => ({ title: p.title, size: p.size, quantity: p.quantity, price: p.price })),
+      shipping_cost: shipping,
+      total: finalTotal,
+      status: "new",
+    });
     let msg = `*طلب جديد من المتجر الإلكتروني*\n\n`;
     msg += `*بيانات العميل:*\nالاسم: ${form.customerName}\nرقم الهاتف: ${form.customerPhone1}\n`;
     if (form.customerPhone2) msg += `رقم إضافي: ${form.customerPhone2}\n`;
