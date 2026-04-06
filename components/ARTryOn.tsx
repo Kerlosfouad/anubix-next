@@ -81,7 +81,7 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
           >
             {/* @ts-ignore */}
             <model-viewer
-              src="/models/src/spider1.glb"
+              src="/models/src/Untitled.glb"
               alt="T-shirt 3D model"
               ar
               ar-modes="webxr scene-viewer quick-look"
