@@ -28,6 +28,30 @@ interface Product {
   category: string;
 }
 
+interface Order {
+  id: string;
+  created_at: string;
+  customer_name: string;
+  phone1: string;
+  phone2?: string;
+  governorate: string;
+  address: string;
+  payment_method: string;
+  items: { title: string; size: string; quantity: number; price: string }[];
+  shipping_cost: number;
+  total: number;
+  status: string;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  discount: number;
+  image: string;
+  category: string;
+}
+
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [pw, setPw] = useState("");

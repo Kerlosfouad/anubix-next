@@ -64,13 +64,12 @@ export default function ShopPage() {
   async function handleConfirm(e: React.FormEvent) {
     e.preventDefault();
     if (!form.customerName || !form.customerPhone1 || !form.governorate || !form.customerAddress) {
-      alert("الرجاء ملء جميع الحقول المطلوبة.");
+      alert("Please fill all required fields.");
       return;
     }
     const govLabel = GOVERNORATES.find((g) => String(g.value) === form.governorate)?.label || form.governorate;
 
-    // Save order to Supabase
-    await supabase.from("orders").insert({
+    const { error } = await supabase.from("orders").insert({
       customer_name: form.customerName,
       phone1: form.customerPhone1,
       phone2: form.customerPhone2 || null,
@@ -82,19 +81,16 @@ export default function ShopPage() {
       total: finalTotal,
       status: "new",
     });
-    let msg = `*طلب جديد من المتجر الإلكتروني*\n\n`;
-    msg += `*بيانات العميل:*\nالاسم: ${form.customerName}\nرقم الهاتف: ${form.customerPhone1}\n`;
-    if (form.customerPhone2) msg += `رقم إضافي: ${form.customerPhone2}\n`;
-    msg += `المحافظة: ${govLabel}\nالعنوان: ${form.customerAddress}\nطريقة الدفع: ${form.paymentMethod}\n\n`;
-    msg += `*تفاصيل الطلب:*\n`;
-    cart.forEach((p, i) => {
-      msg += `${i + 1}. ${p.title} (${p.size}) × ${p.quantity} — ${p.price}\n`;
-    });
-    msg += `\nالشحن: ${shipping} ج.م\nالإجمالي: ${finalTotal.toFixed(2)} ج.م`;
-    window.open(`https://wa.me/201030732613?text=${encodeURIComponent(msg)}`, "_blank");
+
+    if (error) {
+      alert("Something went wrong, please try again.");
+      return;
+    }
+
     clearCart();
     setShowForm(false);
-    setForm({ customerName: "", customerPhone1: "", customerPhone2: "", governorate: "", customerAddress: "", paymentMethod: "الدفع عند الاستلام" });
+    setForm({ customerName: "", customerPhone1: "", customerPhone2: "", governorate: "", customerAddress: "", paymentMethod: "Cash on delivery" });
+    alert("Order placed successfully! We will contact you soon.");
   }
 
   return (
