@@ -158,9 +158,9 @@ export default function AdminPage() {
 
         {tab === "orders" && (
           <div>
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col gap-3 mb-4">
               <h2 className="font-semibold text-sm tracking-widest uppercase">Orders</h2>
-              <div className="flex gap-1.5">
+              <div className="flex gap-1.5 flex-wrap">
                 {["all","new","processing","done","cancelled"].map(s => (
                   <button key={s} onClick={() => setFilterStatus(s)}
                     className={`px-3 py-1.5 rounded-full text-xs font-semibold capitalize transition-all ${filterStatus === s ? "bg-black text-white" : "bg-white text-gray-400 hover:text-black shadow-sm"}`}>
@@ -183,7 +183,7 @@ export default function AdminPage() {
                   <div key={o.id} className="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
                     <div className={`h-1 w-full ${o.status === "new" ? "bg-blue-400" : o.status === "processing" ? "bg-amber-400" : o.status === "done" ? "bg-green-400" : "bg-red-300"}`} />
                     <div className="p-5">
-                      <div className="flex items-start justify-between gap-4">
+                      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                         <div className="flex gap-3 items-start">
                           <div className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center text-sm font-bold shrink-0">
                             {o.customer_name.charAt(0).toUpperCase()}
@@ -204,7 +204,7 @@ export default function AdminPage() {
                             </div>
                           </div>
                         </div>
-                        <div className="flex flex-col items-end gap-2 shrink-0">
+                        <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 sm:shrink-0">
                           <p className="text-lg font-bold">{o.total} <span className="text-xs font-normal text-gray-400">EGP</span></p>
                           <select value={o.status} onChange={e => updateOrderStatus(o.id, e.target.value)}
                             className={`text-xs px-3 py-1.5 rounded-full border font-semibold cursor-pointer ${sc.bg} ${sc.color}`}>
