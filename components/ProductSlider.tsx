@@ -100,8 +100,8 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
 
         {/* Row: prev — PREVIEW — next */}
         <div className="flex items-center justify-center gap-4 mt-3">
-          <div className="swiper-button-prev !static !transform-none !w-auto !h-auto">
-            <i className="ri-arrow-left-line text-lg" />
+          <div className="swiper-button-prev !static !transform-none !w-9 !h-9 flex items-center justify-center rounded-full border-2 border-gray-200 bg-white hover:border-black transition-colors cursor-pointer">
+            <i className="ri-arrow-left-s-line text-lg" />
           </div>
           <button
             onClick={() => activeProduct && setArProduct(activeProduct)}
@@ -110,8 +110,8 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
             <i className="ri-eye-line text-sm" />
             PREVIEW
           </button>
-          <div className="swiper-button-next !static !transform-none !w-auto !h-auto">
-            <i className="ri-arrow-right-line text-lg" />
+          <div className="swiper-button-next !static !transform-none !w-9 !h-9 flex items-center justify-center rounded-full border-2 border-gray-200 bg-white hover:border-black transition-colors cursor-pointer">
+            <i className="ri-arrow-right-s-line text-lg" />
           </div>
         </div>
 

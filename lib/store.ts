@@ -43,9 +43,7 @@ export const useStore = create<StoreState>()(
 
       addToCart: (item) => {
         const cart = get().cart;
-        const existing = cart.find(
-          (p) => p.title === item.title && p.size === item.size
-        );
+        const existing = cart.find((p) => p.title === item.title);
         if (existing) {
           set({
             cart: cart.map((p) =>
