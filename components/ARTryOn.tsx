@@ -92,7 +92,7 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
               shadow-intensity="1"
               ar-scale="fixed"
               ar-placement="floor"
-              camera-orbit="0deg 75deg 2.5m"
+              camera-orbit="0deg 75deg 5m"
               style={{ width: "100%", height: "100%", background: "#111" }}
             >
               <button
