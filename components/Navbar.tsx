@@ -74,6 +74,11 @@ export default function Navbar() {
               )}
             </Link>
 
+            {/* Admin icon */}
+            <Link href="/admin" className="text-black/30 hover:text-black transition-colors text-xl">
+              <i className="ri-settings-3-line" />
+            </Link>
+
             {/* Hamburger — mobile only */}
             <button
               className="lg:hidden text-black focus:outline-none w-8 h-8 flex flex-col justify-center gap-[5px]"
