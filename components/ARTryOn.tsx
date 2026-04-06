@@ -122,7 +122,7 @@ export default function ARTryOn({ onClose }: { shirtImage: string; onClose: () =
             // @ts-ignore
             <model-viewer
               ref={modelRef}
-              src="/models/src/model-cmnhx81c3027ejvpp74d3snq7.glb"
+              src="/models/src/spider1.glb"
               alt="T-shirt 3D model"
               ar
               ar-modes="webxr scene-viewer quick-look"
