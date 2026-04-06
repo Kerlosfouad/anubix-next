@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 import Image from "next/image";
 import { useStore } from "@/lib/store";
 import { Product } from "@/lib/products";
@@ -30,6 +30,7 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
   const [mounted, setMounted] = useState(false);
   const [arProduct, setArProduct] = useState<Product | null>(null);
   const [activeProduct, setActiveProduct] = useState<Product>(products[0]);
+  const swiperRef = useRef<SwiperType | null>(null);
 
   useEffect(() => setMounted(true), []);
   useEffect(() => { if (products[0]) setActiveProduct(products[0]); }, [products]);
@@ -38,15 +39,12 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
     <>
       <div className="w-full">
         <Swiper
-          modules={[Navigation]}
+          modules={[]}
           loop
           grabCursor
           centeredSlides
           speed={250}
-          navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }}
+          onSwiper={(swiper) => { swiperRef.current = swiper; }}
           onSlideChange={(swiper) => {
             const idx = swiper.realIndex;
             if (products[idx]) setActiveProduct(products[idx]);
@@ -100,7 +98,8 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
 
         {/* Row: prev — PREVIEW — next */}
         <div className="flex items-center justify-center gap-4 mt-3">
-          <div className="swiper-button-prev !static !transform-none !w-9 !h-9 flex items-center justify-center rounded-full border-2 border-gray-200 bg-white hover:border-black transition-colors cursor-pointer">
+          <div className="w-9 h-9 flex items-center justify-center rounded-full border-2 border-gray-200 bg-white hover:border-black transition-colors cursor-pointer"
+            onClick={() => swiperRef.current?.slidePrev()}>
             <i className="ri-arrow-left-s-line text-lg" />
           </div>
           <button
@@ -110,7 +109,8 @@ export default function ProductSlider({ products, activeTab, onTabChange, tabs }
             <i className="ri-eye-line text-sm" />
             PREVIEW
           </button>
-          <div className="swiper-button-next !static !transform-none !w-9 !h-9 flex items-center justify-center rounded-full border-2 border-gray-200 bg-white hover:border-black transition-colors cursor-pointer">
+          <div className="w-9 h-9 flex items-center justify-center rounded-full border-2 border-gray-200 bg-white hover:border-black transition-colors cursor-pointer"
+            onClick={() => swiperRef.current?.slideNext()}>
             <i className="ri-arrow-right-s-line text-lg" />
           </div>
         </div>

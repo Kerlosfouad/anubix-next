@@ -56,6 +56,11 @@ html {
   content: "" !important;
 }
 
+/* hide default swiper pagination dots */
+.swiper-pagination {
+  display: none !important;
+}
+
 /* ── Nav underline ── */
 .nav-underline {
   position: relative;
